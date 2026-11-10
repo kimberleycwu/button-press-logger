@@ -1,0 +1,459 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f4f5f7;
+  color: #1d1f23;
+  overscroll-behavior-y: none; /* no pull-to-refresh mid-session */
+  -webkit-text-size-adjust: 100%;
+}
+
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 {
+  font-size: 1.4rem;
+  margin: 8px 0 16px;
+}
+
+h2 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.panel {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.session {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.session label {
+  font-weight: 600;
+}
+
+.session input {
+  flex: 1 1 180px;
+  padding: 8px 10px;
+  font-size: 1rem;
+  border: 1px solid #c8ccd2;
+  border-radius: 8px;
+}
+
+.session input:disabled {
+  background: #eef0f3;
+  color: #555;
+}
+
+.status {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.status.active {
+  color: #0a7a33;
+  font-weight: 600;
+}
+
+.timer {
+  text-align: center;
+}
+
+.timer-display {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: clamp(2.4rem, 10vw, 3.6rem);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 10px;
+}
+
+.timer-controls,
+.log-actions,
+.export {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ctrl {
+  padding: 10px 16px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #c8ccd2;
+  background: #fff;
+  cursor: pointer;
+}
+
+.ctrl.small {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+}
+
+.ctrl.primary {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #fff;
+}
+
+.ctrl.danger {
+  color: #b91c1c;
+  border-color: #e5a5a5;
+}
+
+.ctrl:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pad {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.pad-btn {
+  position: relative;
+  aspect-ratio: 1.6 / 1;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.25);
+  transition: transform 60ms ease, filter 120ms ease, opacity 120ms ease;
+  -webkit-tap-highlight-color: transparent;
+  /* Taps that drift while walking shouldn't scroll or zoom the page. */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.pad-btn .key {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.pad-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pad-btn.flash {
+  transform: translateY(3px) scale(0.97);
+  box-shadow: none;
+  filter: brightness(1.25);
+  outline: 4px solid #1d1f23;
+  outline-offset: -4px;
+}
+
+.ctrl {
+  touch-action: manipulation;
+}
+
+.last-press {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #444;
+  min-height: 1.3em;
+  font-variant-numeric: tabular-nums;
+}
+
+.scroll-hint {
+  display: none;
+}
+
+.hint {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #666;
+  margin: 4px 0 14px;
+}
+
+kbd {
+  font-family: inherit;
+  border: 1px solid #c8ccd2;
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0 5px;
+  background: #fff;
+}
+
+.log-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.export {
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.export label {
+  font-weight: 600;
+}
+
+.export select {
+  padding: 6px 8px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #c8ccd2;
+}
+
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.count-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #eef0f3;
+}
+
+.swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
+.table-wrap {
+  max-height: 360px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid #eceef1;
+  white-space: nowrap;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+}
+
+td.mono {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.empty {
+  color: #888;
+  text-align: center;
+  margin: 12px 0 4px;
+}
+
+/* ---------- phones ---------- */
+/* The "stage" (session, timer, pad) fills exactly one screen; log & export sit below it. */
+
+@media (max-width: 640px), (pointer: coarse) and (max-height: 540px) {
+  main {
+    padding: 0 max(10px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom))
+      max(10px, env(safe-area-inset-left));
+  }
+
+  .stage {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100svh; /* stays put when mobile browser toolbars show/hide */
+    padding-top: max(8px, env(safe-area-inset-top));
+    padding-bottom: 6px;
+  }
+
+  header,
+  .hint {
+    display: none;
+  }
+
+  .stage .panel {
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    flex: 0 0 auto;
+  }
+
+  .session {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .session label {
+    display: none;
+  }
+
+  .session input {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 16px; /* below 16px iOS zooms in on focus */
+  }
+
+  .status {
+    flex: 0 1 auto;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 45%;
+  }
+
+  .timer-display {
+    font-size: 2.6rem;
+    margin-bottom: 6px;
+    line-height: 1.1;
+  }
+
+  .timer-controls {
+    flex-wrap: nowrap;
+  }
+
+  .timer-controls .ctrl {
+    flex: 1 1 0;
+    min-height: 48px;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .last-press {
+    margin-top: 6px;
+    font-size: 0.85rem;
+  }
+
+  .pad {
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    margin: 0;
+  }
+
+  .pad-btn {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 0;
+    border-radius: 20px;
+  }
+
+  .pad-btn .key {
+    font-size: 1rem;
+    top: 10px;
+    left: 12px;
+  }
+
+  .scroll-hint {
+    display: block;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #888;
+    margin: 6px 0 0;
+  }
+
+  .log {
+    margin-top: 8px;
+  }
+
+  .log-actions .ctrl,
+  .export .ctrl,
+  .export select {
+    min-height: 44px;
+    font-size: 1rem;
+  }
+
+  .export select {
+    flex: 1 1 100%;
+  }
+
+  .export .ctrl {
+    flex: 1 1 0;
+  }
+
+  .table-wrap {
+    max-height: 50vh;
+  }
+
+  table {
+    font-size: 0.85rem;
+  }
+
+  th,
+  td {
+    padding: 6px 5px;
+  }
+}
+
+/* Phone held sideways: controls on the left, pad on the right. */
+@media (pointer: coarse) and (orientation: landscape) and (max-height: 540px) {
+  main {
+    max-width: none;
+  }
+
+  .stage {
+    display: grid;
+    grid-template-columns: minmax(230px, 36%) 1fr;
+    grid-template-rows: auto auto 1fr auto;
+    column-gap: 10px;
+  }
+
+  .stage .session {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .stage .timer {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .scroll-hint {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .pad {
+    grid-column: 2;
+    grid-row: 1 / -1;
+  }
+
+  .timer-display {
+    font-size: 2.2rem;
+  }
+}
